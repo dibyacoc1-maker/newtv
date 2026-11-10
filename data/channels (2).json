@@ -1,0 +1,164 @@
+{
+  "zeebangla": {
+    "id": "zeebangla",
+    "servers": [
+      {
+        "name": "SD",
+        "priority": 1,
+        "type": "dash",
+        "url": "https://d1g8wgjurz8via.cloudfront.net/bpk-tv/Zeebangla/default/manifest.mpd",
+        "drm": {
+          "kid": "1df83e058b864da896c9288eef63b113",
+          "key": "fc32f26239054b56aab48225305598fe",
+          "type": "clearkey"
+        },
+        "status": "active"
+      }
+    ],
+    "name": "Zee Bangla",
+    "logo": "",
+    "category": "entertainment",
+    "description": "Bengali entertainment channel",
+    "featured": true,
+    "visible": true
+  },
+  "starjalsha": {
+    "id": "starjalsha",
+    "servers": [
+      {
+        "name": "server 1",
+        "priority": 1,
+        "type": "m3u8",
+        "url": "https://autumn-shape-b04a.soft-disk-1347.workers.dev/?url=http://stvlive.net:8080/starjalsha/index.m3u8",
+        "status": "active"
+      },
+      {
+        "name": "server 2",
+        "priority": 2,
+        "type": "m3u8",
+        "url": "https://autumn-shape-b04a.soft-disk-1347.workers.dev/?url=https://genz2.zibobdixserver.top/302/index.m3u8",
+        "status": "active"
+      },
+      {
+        "name": "server 3",
+        "priority": 3,
+        "type": "m3u8",
+        "url": "https://yupptvcatchupire.yuppcdn.net/preview/starjalsha/1800.m3u8",
+        "status": "active"
+      }
+    ],
+    "name": "Star Jalsha",
+    "logo": "",
+    "category": "entertainment",
+    "description": "Bengali entertainment channel",
+    "featured": true,
+    "visible": true
+  },
+  "zeebangla2": {
+    "id": "zeebangla2",
+    "servers": [
+      {
+        "name": "Server 1",
+        "priority": 1,
+        "type": "m3u8",
+        "url": "https://tvsen6.aynaott.com/ZeeBangla/index.m3u8",
+        "status": "active"
+      },
+      {
+        "name": "Server 2",
+        "priority": 2,
+        "type": "m3u8",
+        "url": "https://d1rc86nwwc9fag.cloudfront.net/260723/smil:zeebangla.smil/chunklist_b2628000.m3u8",
+        "status": "active"
+      },
+      {
+        "name": "Server 3",
+        "priority": 3,
+        "type": "m3u8",
+        "url": "https://d1rc86nwwc9fag.cloudfront.net/260723/smil:zeebangla.smil/chunklist_b896000.m3u8",
+        "status": "active"
+      },
+      {
+        "name": "Server 4",
+        "priority": 4,
+        "type": "m3u8",
+        "url": "https://catchup.yuppcdn.net/amazonv2/36/preview/zeebangla/master/chunklist.m3u8",
+        "status": "active"
+      }
+    ],
+    "name": "Zee Bangla (Alternate)",
+    "logo": "",
+    "category": "entertainment",
+    "description": "Alternate Zee Bangla stream sources",
+    "featured": false,
+    "visible": true
+  },
+  "zee24hour": {
+    "id": "zee24hour",
+    "servers": [
+      {
+        "name": "Zee 24 Hour",
+        "priority": 1,
+        "type": "m3u8",
+        "url": "https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01412-xiaomiasia-zee24ghantaa-xiaomi/playlist.m3u8",
+        "status": "active"
+      }
+    ],
+    "name": "Zee 24 Ghanta",
+    "logo": "",
+    "category": "news",
+    "description": "Bengali news and current affairs",
+    "featured": true,
+    "visible": true
+  },
+  "batul-the-great": {
+    "id": "batul-the-great",
+    "servers": [
+      {
+        "name": "Server 1",
+        "priority": 1,
+        "type": "m3u8",
+        "url": "https://live20.bozztv.com/giatvplayout7/giatv-209869/index.m3u8",
+        "status": "active"
+      }
+    ],
+    "name": "Batul the Great",
+    "logo": "",
+    "category": "kids",
+    "description": "Children’s animation channel",
+    "featured": false,
+    "visible": true
+  },
+  "goldmine": {
+    "id": "goldmine",
+    "servers": [
+      {
+        "name": "Server 1",
+        "priority": 1,
+        "type": "m3u8",
+        "url": "https://streams.tangotv.in/GOLDMINES/ORIGIN/index.m3u8",
+        "status": "active"
+      },
+      {
+        "name": "Server 2",
+        "priority": 2,
+        "type": "m3u8",
+        "url": "https://cdn.pishow.tv/ott/live/1459/master.m3u8",
+        "status": "active"
+      },
+      {
+        "name": "Server 3",
+        "priority": 3,
+        "type": "m3u8",
+        "url": "https://mumt04.tangotv.in/m18aqlK4GOLDMINES/index.m3u8",
+        "status": "active"
+      }
+    ],
+    "name": "Goldmines",
+    "logo": "",
+    "category": "movies",
+    "description": "Movies and entertainment",
+    "featured": false,
+    "visible": true
+  }
+}
