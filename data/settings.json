@@ -13,14 +13,14 @@
   "surfaceColor": "#171a20",
   "defaultTheme": "dark",
   "notice": "Add your authorized stream sources in data/channels.json to start watching.",
-  "noticeVisible": true,
+  "noticeVisible": false,
   "navigation": [
     {
       "id": "home",
       "label": "Home",
       "icon": "⌂",
       "href": "#home",
-      "visible": true
+      "visible": false
     },
     {
       "id": "channels",
@@ -41,15 +41,15 @@
       "label": "Settings",
       "icon": "⚙",
       "href": "#settings",
-      "visible": true
+      "visible": false 
     }
   ],
   "home": {
-    "showFeatured": true,
-    "showContinueWatching": true,
-    "showRecentlyWatched": true,
-    "showFavorites": true,
-    "showCategories": true
+    "showFeatured": false,
+    "showContinueWatching": false,
+    "showRecentlyWatched": false,
+    "showFavorites": false,
+    "showCategories": false
   },
   "player": {
     "autoPlay": true,
@@ -57,8 +57,8 @@
     "autoHideControlsMs": 4000
   },
   "defaultChannel": "",
-  "appVersion": "1.0.1",
-  "configurationVersion": 1,
+  "appVersion": "1.0.2",
+  "configurationVersion": 2,
   "lastUpdated": "2026-11-10",
   "maintenanceMode": false
 }
