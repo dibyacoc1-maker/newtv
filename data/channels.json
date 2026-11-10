@@ -1,1 +1,27 @@
-{}
+{
+  "zeebangla": {
+    "id": "zeebangla",
+    "name": "Zeebangla",
+    "logo": "https://your-domain.example/logos/news.png",
+    "category": "entertainment",
+    "description": "অনুমোদিত চ্যানেল",
+    "featured": true,
+    "visible": true,
+    "servers": [
+      {
+        "name": "Main HLS",
+        "priority": 1,
+        "type": "m3u8",
+        "url": "https://tvsen6.aynaott.com/ZeeBangla/index.m3u8",
+        "status": "active"
+      },
+      {
+        "name": "Backup DASH",
+        "priority": 2,
+        "type": "dash",
+        "url": "https://d1rc86nwwc9fag.cloudfront.net/260723/smil:zeebangla.smil/chunklist_b2628000.m3u8",
+        "status": "active"
+      }
+    ]
+  }
+}
