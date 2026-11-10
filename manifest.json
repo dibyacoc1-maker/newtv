@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "Luma TV",
+  "short_name": "Luma TV",
+  "description": "A configurable live television experience.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#e83b4f",
+  "background_color": "#0c0e12",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

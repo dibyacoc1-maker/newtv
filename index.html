@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#e83b4f">
+  <meta name="description" content="A configurable live television experience.">
+  <title>Luma TV — Live television</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="app-shell">
+    <div id="menu-overlay" class="menu-overlay" aria-hidden="true"></div>
+    <aside id="sidebar" class="sidebar" aria-label="Primary navigation">
+      <a class="brand" href="#home" aria-label="Home">
+        <img id="brand-logo" class="brand-mark" src="./icon.svg" alt="" onerror="this.hidden=true">
+        <span><span id="brand-name" class="brand-name">Luma TV</span><span id="brand-tagline" class="brand-tagline">Your channels. Your screen.</span></span>
+      </a>
+      <nav id="navigation" class="nav-list"></nav>
+      <div class="sidebar-bottom">Local-first · Configuration driven</div>
+    </aside>
+    <main id="main" class="main" tabindex="-1">
+      <header class="topbar">
+        <button id="menu-button" class="menu-button" aria-label="Open navigation" aria-expanded="false">☰</button>
+        <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" class="search-input" type="search" placeholder="Search channels…" autocomplete="off" aria-label="Search channels"></label>
+        <span class="topbar-spacer"></span>
+        <select id="theme-select" class="theme-select" aria-label="Color theme"><option value="system">System</option><option value="dark">Dark</option><option value="light">Light</option></select>
+      </header>
+      <div id="load-error" class="notice-error" role="alert" hidden></div>
+      <section id="home" class="hero">
+        <div class="hero-panel"><div class="hero-copy"><div class="eyebrow">Streaming, made yours</div><h1 id="hero-title">Your channels.<br>Your screen.</h1><p id="hero-description">A calm, customizable home for the live channels you love.</p><button id="browse-button" class="button-primary">Browse channels <span aria-hidden="true">→</span></button></div></div>
+      </section>
+      <div id="notice" class="notice" role="status" hidden><span aria-hidden="true">◉</span><span id="notice-text"></span></div>
+      <section id="home-collections" aria-label="Home collections"></section>
+      <section id="channels" class="content-section">
+        <div class="section-head"><div><h2 class="section-title" id="all-channels-title">All channels</h2><p class="section-subtitle" id="channel-count">Loading channel guide…</p></div></div>
+        <div id="category-filters" class="category-pills" role="toolbar" aria-label="Channel categories"></div>
+        <div id="channel-grid" class="channel-grid" aria-live="polite"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+      </section>
+      <section id="favorites" class="content-section" aria-label="Favorite channels">
+        <div class="section-head"><div><h2 class="section-title" id="favorites-title">Your favorites</h2><p class="section-subtitle">Channels you have saved for quick access</p></div></div>
+        <div id="favorite-grid" class="channel-grid"></div>
+      </section>
+      <section id="settings" class="content-section settings-section">
+        <div class="section-head"><div><h2 class="section-title">App settings</h2><p class="section-subtitle">Updates, preferences, and local data</p></div></div>
+        <div class="settings-panel">
+          <div class="settings-row"><div><p>Application update</p><small id="update-status">Check for a newer offline-ready app version.</small></div><button id="update-button" class="button-soft">Check for updates</button></div>
+          <div class="settings-row"><div><p>Playback volume</p><small>Your preference is saved on this device.</small></div><input id="global-volume" class="volume-range" type="range" min="0" max="1" step="0.05" aria-label="Default playback volume"></div>
+          <div class="settings-row"><div><p>Watch history</p><small id="history-summary">History stays in this browser and does not store stream URLs.</small></div><button id="clear-history" class="button-soft">Clear history</button></div>
+        </div>
+      </section>
+      <footer class="footer"><span id="footer-brand">Luma TV</span> <span aria-hidden="true">·</span> <span id="app-version">Version 1.0.0</span> <span aria-hidden="true">·</span> Configure channels in <code>data/channels.json</code>.</footer>
+    </main>
+  </div>
+
+  <dialog id="player-dialog" class="player-dialog" aria-label="Video player">
+    <div class="player-shell">
+      <header class="player-header"><h2 id="player-title" class="player-title">Live TV</h2><span id="player-status" class="player-status" role="status">Ready</span><button id="player-close" class="player-close" aria-label="Close player">×</button></header>
+      <div id="player-stage" class="player-stage">
+        <video id="video" playsinline preload="none" aria-label="Live television video"></video>
+        <div id="youtube-host" class="youtube-host" hidden></div>
+        <div id="player-error" class="player-error" hidden role="alert"><h3>We couldn’t start this stream</h3><p id="player-error-message"></p><button id="player-retry" class="button-primary">Retry</button></div>
+      </div>
+      <div id="player-controls" class="player-controls" aria-label="Playback controls">
+        <button id="player-play" aria-label="Play or pause">Play</button><button id="player-mute" aria-label="Mute or unmute">Mute</button><input id="player-volume" class="volume-range" type="range" min="0" max="1" step="0.05" aria-label="Volume">
+        <button id="player-previous" aria-label="Previous channel">Previous</button><button id="player-next" aria-label="Next channel">Next</button>
+        <select id="player-server" aria-label="Stream server"></select><span class="player-control-spacer"></span>
+        <button id="player-pip" aria-label="Picture in picture">PiP</button><button id="player-fullscreen" aria-label="Fullscreen">Fullscreen</button>
+      </div>
+      <div class="player-hint">Use arrow keys to move focus · Enter to activate controls · Escape to close</div>
+    </div>
+  </dialog>
+
+  <script src="./hls.min.js" defer></script>
+  <script src="./shaka-player.compiled.js" defer></script>
+  <script type="module">
+    import { storage } from './storage.js';
+    import { StreamPlayer } from './player.js';
+
+    const $ = id => document.getElementById(id);
+    const fallbackSettings = {
+      appName: 'Web TV', shortName: 'Web TV', tagline: 'Your channels. Your screen.', description: 'A configurable live television experience.',
+      themeColor: '#e83b4f', primaryColor: '#ee4054', secondaryColor: '#ffd166', backgroundColor: '#0c0e12', surfaceColor: '#171a20',
+      defaultTheme: 'dark', notice: '', noticeVisible: false, navigation: [],
+      home: { showFeatured: true, showContinueWatching: true, showRecentlyWatched: true, showFavorites: true, showCategories: true },
+      player: { autoPlay: true, defaultVolume: 0.8, autoHideControlsMs: 4000 }, appVersion: '1.0.0', maintenanceMode: false
+    };
+    const fallbackCategories = [{ id: 'all', name: 'All', icon: '✦', displayOrder: 0, visible: true }];
+    let settings = fallbackSettings;
+    let categories = fallbackCategories;
+    let channels = {};
+    let activeCategory = 'all';
+    let query = '';
+    let registration = null;
+    let currentChannelId = '';
+    const mediaPreference = matchMedia('(prefers-color-scheme: light)');
+
+    const player = new StreamPlayer({
+      dialog: $('player-dialog'), stage: $('player-stage'), video: $('video'), youtube: $('youtube-host'), controls: $('player-controls'),
+      title: $('player-title'), status: $('player-status'), error: $('player-error'), errorMessage: $('player-error-message'),
+      play: $('player-play'), mute: $('player-mute'), volume: $('player-volume'), fullscreen: $('player-fullscreen'), pip: $('player-pip'),
+      previous: $('player-previous'), next: $('player-next'), close: $('player-close'), retry: $('player-retry'), serverSelect: $('player-server')
+    }, { defaultVolume: storage.hasVolumePreference ? storage.volume : fallbackSettings.player.defaultVolume, autoHideControlsMs: 4000 }, {
+      onPrevious: () => moveChannel(-1), onNext: () => moveChannel(1),
+      onServerSuccess: (channel, server) => { if (channel && server) storage.setServer(channel.id, server.name || ''); },
+      onPosition: position => { if (currentChannelId) storage.rememberPosition(currentChannelId, position); },
+      onClose: () => { currentChannelId = ''; renderCollections(); }
+    });
+
+    function safeText(value, fallback = '') { return typeof value === 'string' ? value : fallback; }
+    function validId(value) { return typeof value === 'string' && /^[a-z0-9][a-z0-9_-]{0,63}$/i.test(value); }
+    function applyBranding() {
+      document.title = `${settings.appName} — Live television`;
+      document.querySelector('meta[name=description]').content = safeText(settings.description);
+      document.querySelector('meta[name=theme-color]').content = settings.themeColor || settings.primaryColor;
+      document.documentElement.style.setProperty('--primary', settings.primaryColor || fallbackSettings.primaryColor);
+      document.documentElement.style.setProperty('--secondary', settings.secondaryColor || fallbackSettings.secondaryColor);
+      document.documentElement.style.setProperty('--bg', settings.backgroundColor || fallbackSettings.backgroundColor);
+      document.documentElement.style.setProperty('--surface', settings.surfaceColor || fallbackSettings.surfaceColor);
+      $('brand-name').textContent = settings.appName || 'Web TV'; $('footer-brand').textContent = settings.appName || 'Web TV';
+      $('brand-tagline').textContent = settings.tagline || '';
+      $('hero-title').innerHTML = `${escapeHTML(settings.appName || 'Web TV')}<br>${escapeHTML(settings.tagline || 'Your channels. Your screen.')}`;
+      $('hero-description').textContent = settings.description || fallbackSettings.description;
+      $('browse-button').innerHTML = settings.defaultChannel ? 'Watch now <span aria-hidden="true">→</span>' : 'Browse channels <span aria-hidden="true">→</span>';
+      $('app-version').textContent = `Version ${settings.appVersion || '1.0.0'}`;
+      const logo = safeText(settings.logoUrl); if (logo) $('brand-logo').src = logo;
+      const favicon = settings.faviconUrl || settings.appIconUrl;
+      if (favicon) document.querySelector('link[rel=icon]').href = favicon;
+      $('notice').hidden = !(settings.noticeVisible && settings.notice);
+      $('notice-text').textContent = safeText(settings.notice);
+      const theme = storage.theme || settings.defaultTheme || 'system'; setTheme(theme);
+      if (settings.maintenanceMode) showAppError('This service is in maintenance mode. Channel playback may be temporarily unavailable.');
+      renderNavigation();
+      updateManifest();
+    }
+    function escapeHTML(value) { return String(value).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]); }
+    function setTheme(theme) {
+      const choice = ['dark', 'light', 'system'].includes(theme) ? theme : 'system';
+      const resolved = choice === 'system' ? (mediaPreference.matches ? 'light' : 'dark') : choice;
+      document.body.dataset.theme = resolved; $('theme-select').value = choice;
+    }
+    mediaPreference.addEventListener?.('change', () => { if ((storage.theme || settings.defaultTheme) === 'system') setTheme('system'); });
+
+    function renderNavigation() {
+      const items = Array.isArray(settings.navigation) ? settings.navigation.filter(item => item && item.visible !== false && typeof item.href === 'string') : [];
+      $('navigation').replaceChildren();
+      for (const item of items) {
+        const link = document.createElement('a'); link.className = 'nav-link';
+        const target = item.href.startsWith('#') ? document.getElementById(item.href.slice(1)) : null;
+        link.href = target ? item.href : '#home';
+        link.innerHTML = `<span class="nav-icon" aria-hidden="true">${escapeHTML(item.icon || '•')}</span><span>${escapeHTML(item.label || item.id || 'Section')}</span>`;
+        link.addEventListener('click', closeMenu); $('navigation').append(link);
+      }
+    }
+    function validStreamUrl(value) {
+      try { const url = new URL(value, location.href); return ['http:', 'https:'].includes(url.protocol); } catch (_) { return false; }
+    }
+    function normalizeChannels(raw) {
+      if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+      const output = {};
+      for (const [key, item] of Object.entries(raw)) {
+        if (!item || typeof item !== 'object' || !validId(item.id || key) || typeof item.name !== 'string' || !item.name.trim()) continue;
+        const servers = Array.isArray(item.servers) ? item.servers.filter(server => server && typeof server === 'object' && server.status === 'active' && typeof server.url === 'string' && server.url.trim() && validStreamUrl(server.url.trim()) && ['m3u8', 'dash', 'mpd', 'youtube'].includes(String(server.type).toLowerCase())).map(server => ({
+          name: safeText(server.name, 'Stream'), priority: Number.isFinite(Number(server.priority)) ? Number(server.priority) : 999,
+          type: String(server.type).toLowerCase(), url: server.url.trim(), status: 'active', drm: server.drm && typeof server.drm === 'object' ? server.drm : undefined
+        })).sort((a, b) => a.priority - b.priority) : [];
+        output[item.id || key] = { id: item.id || key, name: item.name.trim(), logo: safeText(item.logo), category: safeText(item.category), description: safeText(item.description), featured: item.featured === true, visible: item.visible !== false, servers };
+      }
+      return output;
+    }
+    function normalizeCategories(raw) {
+      if (!Array.isArray(raw)) return fallbackCategories;
+      const seen = new Set();
+      return raw.filter(item => item && validId(item.id) && typeof item.name === 'string' && item.visible !== false && !seen.has(item.id) && seen.add(item.id))
+        .map(item => ({ id: item.id, name: item.name, icon: safeText(item.icon, '•'), description: safeText(item.description), displayOrder: Number(item.displayOrder) || 0, featured: item.featured === true }))
+        .sort((a, b) => a.displayOrder - b.displayOrder);
+    }
+    async function loadJSON(path, fallback) {
+      try { const response = await fetch(new URL(path, import.meta.url), { cache: 'no-cache' }); if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`); return await response.json(); }
+      catch (error) { console.error(error); return fallback; }
+    }
+    function showAppError(message) { const box = $('load-error'); box.textContent = message; box.hidden = false; }
+    async function initialize() {
+      const [rawSettings, rawCategories, rawChannels] = await Promise.all([
+        loadJSON('./data/settings.json', fallbackSettings), loadJSON('./data/categories.json', fallbackCategories), loadJSON('./data/channels.json', {})
+      ]);
+      settings = rawSettings && typeof rawSettings === 'object' && !Array.isArray(rawSettings) ? { ...fallbackSettings, ...rawSettings } : fallbackSettings;
+      categories = normalizeCategories(rawCategories); channels = normalizeChannels(rawChannels);
+      const configuredVolume = Number(settings.player?.defaultVolume);
+      const defaultVolume = storage.hasVolumePreference ? storage.volume : (Number.isFinite(configuredVolume) ? Math.min(1, Math.max(0, configuredVolume)) : 0.8);
+      player.options = { ...settings.player, defaultVolume, autoHideControlsMs: Number(settings.player?.autoHideControlsMs) || 4000 };
+      player.el.volume.value = String(defaultVolume); player.el.video.volume = defaultVolume; $('global-volume').value = String(defaultVolume);
+      applyBranding(); renderCategories(); renderChannels(); renderCollections();
+      $('channel-count').textContent = `${Object.values(channels).filter(channel => channel.visible).length} available`;
+      if (!Object.keys(channels).length) showAppError('Channel data is empty or unavailable. Add channel entries to data/channels.json; the app remains ready for your authorized streams.');
+      else if (rawChannels === null) showAppError('Channel configuration could not be loaded. Showing cached data if available.');
+      if (rawSettings === fallbackSettings || rawCategories === fallbackCategories) showAppError('Some configuration files could not be loaded. Safe defaults are active; check your static host and data folder.');
+      configureManifest();
+      registerServiceWorker();
+    }
+
+    function categoryName(id) { return categories.find(category => category.id === id)?.name || id || 'Other'; }
+    function visibleChannels() { return Object.values(channels).filter(channel => channel.visible); }
+    function filteredChannels() {
+      const needle = query.trim().toLowerCase();
+      return visibleChannels().filter(channel => (activeCategory === 'all' || channel.category === activeCategory) &&
+        (!needle || `${channel.name} ${channel.description} ${categoryName(channel.category)}`.toLowerCase().includes(needle)));
+    }
+    function makeCard(channel) {
+      const card = document.createElement('article'); card.className = 'channel-card'; card.tabIndex = 0; card.setAttribute('role', 'button'); card.setAttribute('aria-label', `Play ${channel.name}`);
+      const logo = document.createElement('div'); logo.className = 'channel-logo';
+      if (channel.logo) { const image = document.createElement('img'); image.src = channel.logo; image.alt = `${channel.name} logo`; image.loading = 'lazy'; image.onerror = () => { image.remove(); logo.textContent = channel.name.slice(0, 2).toUpperCase(); }; logo.append(image); }
+      else logo.textContent = channel.name.slice(0, 2).toUpperCase();
+      card.append(logo);
+      if (channel.featured) { const badge = document.createElement('span'); badge.className = 'featured-badge'; badge.textContent = 'FEATURED'; card.append(badge); }
+      const fav = document.createElement('button'); fav.type = 'button'; fav.className = `favorite-button${storage.isFavorite(channel.id) ? ' is-active' : ''}`; fav.setAttribute('aria-label', storage.isFavorite(channel.id) ? 'Remove from favorites' : 'Add to favorites'); fav.setAttribute('aria-pressed', String(storage.isFavorite(channel.id))); fav.textContent = storage.isFavorite(channel.id) ? '♥' : '♡';
+      fav.addEventListener('click', event => { event.stopPropagation(); storage.toggleFavorite(channel.id); renderChannels(); renderCollections(); }); card.append(fav);
+      const name = document.createElement('span'); name.className = 'channel-name'; name.textContent = channel.name; card.append(name);
+      const meta = document.createElement('span'); meta.className = 'channel-meta'; meta.textContent = channel.description || categoryName(channel.category); card.append(meta);
+      const chip = document.createElement('span'); chip.className = 'category-chip'; chip.textContent = categoryName(channel.category); card.append(chip);
+      const open = () => openChannel(channel.id); card.addEventListener('click', open); card.addEventListener('keydown', event => { if (event.key === 'Enter') open(); });
+      return card;
+    }
+    function renderCategories() {
+      const host = $('category-filters'); host.replaceChildren();
+      const available = [{ id: 'all', name: 'All', icon: '✦' }, ...categories.filter(category => category.id !== 'all')];
+      for (const category of available) {
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'category-pill'; button.setAttribute('aria-pressed', String(activeCategory === category.id));
+        button.textContent = `${category.icon || ''} ${category.name}`.trim(); button.addEventListener('click', () => { activeCategory = category.id; renderCategories(); renderChannels(); }); host.append(button);
+      }
+    }
+    function renderChannels() {
+      const host = $('channel-grid'); host.replaceChildren();
+      const list = filteredChannels();
+      if (!list.length) { host.append(emptyState(query ? 'No matching channels' : 'No channels in this category', query ? 'Try another search term.' : 'Add your authorized channel entries in data/channels.json.')); }
+      else for (const channel of list) host.append(makeCard(channel));
+      $('channel-count').textContent = `${list.length} channel${list.length === 1 ? '' : 's'} shown`;
+      renderFavorites();
+    }
+    function renderFavorites() {
+      const favorites = storage.favorites.map(id => channels[id]).filter(channel => channel?.visible);
+      const host = $('favorite-grid'); host.replaceChildren();
+      if (!favorites.length) host.append(emptyState('No favorites yet', 'Tap the heart on a channel to save it here.'));
+      else favorites.forEach(channel => host.append(makeCard(channel)));
+    }
+    function emptyState(title, message) { const box = document.createElement('div'); box.className = 'empty-state'; box.style.gridColumn = '1 / -1'; const strong = document.createElement('strong'); strong.textContent = title; box.append(strong, document.createTextNode(message)); return box; }
+    function renderCollections() {
+      const host = $('home-collections'); host.replaceChildren();
+      const home = settings.home || {};
+      const history = storage.history.map(item => channels[item.channelId]).filter(channel => channel?.visible);
+      const groups = [
+        ['Continue Watching', home.showContinueWatching ? [channels[currentChannelId || storage.lastChannel]].filter(Boolean) : [], 'Pick up where you left off.'],
+        ['Recently Watched', home.showRecentlyWatched ? history.slice(0, 8) : [], 'Your recent channels on this device.'],
+        ['Favorite Channels', home.showFavorites ? storage.favorites.map(id => channels[id]).filter(channel => channel?.visible).slice(0, 8) : [], 'Your saved channels.'],
+        ['Featured Channels', home.showFeatured ? visibleChannels().filter(channel => channel.featured).slice(0, 8) : [], 'Selected from your channel guide.']
+      ];
+      for (const [title, items, message] of groups) {
+        if (!items.length) continue;
+        const section = document.createElement('section'); section.className = 'content-section'; const header = document.createElement('div'); header.className = 'section-head';
+        const info = document.createElement('div'); const heading = document.createElement('h2'); heading.className = 'section-title'; heading.textContent = title; const sub = document.createElement('p'); sub.className = 'section-subtitle'; sub.textContent = message; info.append(heading, sub); header.append(info); section.append(header);
+        const row = document.createElement('div'); row.className = 'channel-row'; items.forEach(channel => row.append(makeCard(channel))); section.append(row); host.append(section);
+      }
+      if (home.showCategories) {
+        const section = document.createElement('section'); section.className = 'content-section'; const h = document.createElement('div'); h.className = 'section-head'; const info = document.createElement('div'); const title = document.createElement('h2'); title.className = 'section-title'; title.textContent = 'Explore categories'; const sub = document.createElement('p'); sub.className = 'section-subtitle'; sub.textContent = 'Choose a category to filter the channel guide.'; info.append(title, sub); h.append(info); section.append(h);
+        const row = document.createElement('div'); row.className = 'category-pills';
+        categories.filter(category => category.featured).forEach(category => { const btn = document.createElement('button'); btn.className = 'category-pill'; btn.textContent = `${category.icon} ${category.name}`; btn.addEventListener('click', () => { activeCategory = category.id; renderCategories(); renderChannels(); location.hash = '#channels'; }); row.append(btn); });
+        if (row.childElementCount) { section.append(row); host.append(section); }
+      }
+      $('history-summary').textContent = `${history.length} recently watched channel${history.length === 1 ? '' : 's'} saved locally. Stream URLs and DRM values are not stored.`;
+    }
+    function openChannel(id) {
+      const channel = channels[id]; if (!channel) return;
+      currentChannelId = id; storage.rememberChannel(id, 0); renderCollections();
+      const active = channel.servers.filter(server => server.status === 'active').sort((a, b) => a.priority - b.priority);
+      if (!active.length) {
+        $('player-title').textContent = channel.name;
+        player.el.dialog.showModal(); player.el.errorMessage.textContent = 'This channel has no active, valid stream server. Add an authorized stream URL and set the server status to "active" in data/channels.json.'; player.el.error.hidden = false; player.el.stage.classList.remove('is-loading'); player.el.status.textContent = 'No active server'; return;
+      }
+      const configuredVolume = Number(settings.player?.defaultVolume);
+      const defaultVolume = storage.hasVolumePreference ? storage.volume : (Number.isFinite(configuredVolume) ? Math.min(1, Math.max(0, configuredVolume)) : 0.8);
+      player.options = { ...settings.player, defaultVolume, autoHideControlsMs: Number(settings.player?.autoHideControlsMs) || 4000 };
+      player.el.video.volume = defaultVolume; player.el.volume.value = String(defaultVolume);
+      player.play(channel, active, storage.getServer(id));
+    }
+    function moveChannel(direction) {
+      const list = visibleChannels(); const index = list.findIndex(channel => channel.id === currentChannelId); if (!list.length) return;
+      const next = (index + direction + list.length) % list.length; openChannel(list[next].id);
+    }
+    function closeMenu() { $('sidebar').classList.remove('is-open'); $('menu-overlay').classList.remove('is-visible'); $('menu-button').setAttribute('aria-expanded', 'false'); }
+    $('menu-button').addEventListener('click', () => { const open = $('sidebar').classList.toggle('is-open'); $('menu-overlay').classList.toggle('is-visible', open); $('menu-button').setAttribute('aria-expanded', String(open)); });
+    $('menu-overlay').addEventListener('click', closeMenu);
+    $('browse-button').addEventListener('click', () => { const preferred = channels[settings.defaultChannel]; if (preferred?.visible) openChannel(preferred.id); else { location.hash = '#channels'; $('search').focus(); } });
+    $('search').addEventListener('input', debounce(event => { query = event.target.value; renderChannels(); }, 160));
+    $('search').addEventListener('change', event => storage.rememberSearch(event.target.value));
+    $('theme-select').addEventListener('change', event => { storage.setTheme(event.target.value); setTheme(event.target.value); });
+    $('global-volume').addEventListener('input', event => { storage.setVolume(event.target.value); player.el.video.volume = Number(event.target.value); player.el.volume.value = event.target.value; });
+    $('clear-history').addEventListener('click', () => { storage.clearHistory(); renderCollections(); });
+    function debounce(fn, wait) { let timer; return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), wait); }; }
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') { if ($('sidebar').classList.contains('is-open')) { event.preventDefault(); closeMenu(); return; } if ($('player-dialog').open) { event.preventDefault(); player.close(); return; } }
+      if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      const active = document.activeElement;
+      if (active && (active.matches('input,textarea,select,[contenteditable=true]') || active.closest('input,textarea,select,[contenteditable=true]'))) return;
+      if ($('player-dialog').open && active?.closest('.player-controls')) return;
+      const candidates = [...document.querySelectorAll('a[href],button:not(:disabled),input:not(:disabled),select:not(:disabled),[tabindex="0"]')]
+        .filter(node => !node.closest('[hidden]') && !node.closest('.is-hidden') && node.getClientRects().length && getComputedStyle(node).visibility !== 'hidden');
+      const origin = active?.getClientRects().length ? active.getBoundingClientRect() : null; if (!origin) return;
+      const ox = origin.left + origin.width / 2, oy = origin.top + origin.height / 2;
+      let chosen = null, best = Infinity;
+      for (const node of candidates) {
+        if (node === active) continue;
+        const rect = node.getBoundingClientRect(), x = rect.left + rect.width / 2, y = rect.top + rect.height / 2;
+        const dx = x - ox, dy = y - oy;
+        const forward = event.key === 'ArrowRight' ? dx > 2 : event.key === 'ArrowLeft' ? dx < -2 : event.key === 'ArrowDown' ? dy > 2 : dy < -2;
+        if (!forward) continue;
+        const primary = event.key.startsWith('ArrowLeft') || event.key.startsWith('ArrowRight') ? Math.abs(dx) : Math.abs(dy);
+        const secondary = event.key.startsWith('ArrowLeft') || event.key.startsWith('ArrowRight') ? Math.abs(dy) : Math.abs(dx);
+        const score = primary + secondary * 1.7;
+        if (score < best) { best = score; chosen = node; }
+      }
+      if (chosen) { event.preventDefault(); chosen.focus({ preventScroll: true }); chosen.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' }); }
+    });
+
+    async function registerServiceWorker() {
+      if (!('serviceWorker' in navigator) || location.protocol === 'file:') { $('update-status').textContent = 'Serve this folder over HTTPS or localhost to enable offline support and app updates.'; $('update-button').disabled = true; return; }
+      try {
+        registration = await navigator.serviceWorker.register(new URL('./sw.js', import.meta.url), { scope: './' });
+        watchForWaitingWorker(registration);
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (sessionStorage.getItem('luma-update-reload') === 'yes') return;
+          sessionStorage.setItem('luma-update-reload', 'yes'); location.reload();
+        });
+        $('update-status').textContent = 'Offline app is ready. Check for updates whenever you like.';
+      } catch (error) { $('update-status').textContent = `Offline support could not start: ${error.message}`; }
+    }
+    function watchForWaitingWorker(reg) {
+      if (reg.waiting && navigator.serviceWorker.controller) offerUpdate(reg.waiting);
+      reg.addEventListener('updatefound', () => {
+        const worker = reg.installing; if (!worker) return;
+        worker.addEventListener('statechange', () => { if (worker.state === 'installed' && navigator.serviceWorker.controller) offerUpdate(worker); });
+      });
+    }
+    function offerUpdate(worker) {
+      $('update-status').textContent = 'A new version is ready. Select “Activate update” to install it.';
+      $('update-button').textContent = 'Activate update';
+      $('update-button').dataset.action = 'activate'; $('update-button').onclick = () => {
+        if (!window.confirm('Install the downloaded update and reload the app now?')) return;
+        sessionStorage.removeItem('luma-update-reload'); worker.postMessage({ type: 'SKIP_WAITING' }); $('update-status').textContent = 'Installing update…';
+      };
+    }
+    $('update-button').addEventListener('click', async () => {
+      if ($('update-button').dataset.action === 'activate') return;
+      $('update-status').textContent = 'Checking for an app update…'; $('update-button').disabled = true;
+      try {
+        if (!registration) throw new Error('Service Worker is not registered. Use HTTPS or localhost.');
+        await registration.update();
+        setTimeout(() => {
+          if (registration.waiting && navigator.serviceWorker.controller) offerUpdate(registration.waiting);
+          else { $('update-status').textContent = 'No new app version is available.'; }
+        }, 1200);
+      } catch (error) { $('update-status').textContent = `Update check failed: ${error.message}`; }
+      finally { setTimeout(() => { $('update-button').disabled = false; }, 1400); }
+    });
+
+    async function updateManifest() {
+      const manifest = {
+        id: location.pathname, name: settings.appName, short_name: settings.shortName || settings.appName,
+        description: settings.description, start_url: location.pathname, scope: new URL('.', location.href).pathname,
+        display: 'standalone', theme_color: settings.themeColor || settings.primaryColor,
+        background_color: settings.backgroundColor,
+        icons: [{ src: settings.appIconUrl || settings.logoUrl || new URL('./icon.svg', location.href).href, sizes: 'any', type: (settings.appIconUrl || settings.logoUrl || '').endsWith('.png') ? 'image/png' : 'image/svg+xml', purpose: 'any maskable' }]
+      };
+      try { const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' }); const link = document.querySelector('link[rel=manifest]'); link.href = URL.createObjectURL(blob); } catch (_) { /* retain the static default manifest */ }
+    }
+    function configureManifest() { updateManifest(); }
+
+    initialize().catch(error => { console.error(error); showAppError('The app could not read its configuration. Safe defaults are showing; serve the folder over HTTP or HTTPS and check the data directory.'); settings = fallbackSettings; categories = fallbackCategories; channels = {}; applyBranding(); renderCategories(); renderChannels(); renderCollections(); });
+  </script>
+</body>
+</html>

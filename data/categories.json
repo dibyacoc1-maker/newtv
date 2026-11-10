@@ -1,0 +1,10 @@
+[
+  { "id": "all", "name": "All", "icon": "✦", "description": "Every available channel", "displayOrder": 0, "visible": true, "featured": true },
+  { "id": "entertainment", "name": "Entertainment", "icon": "▶", "description": "Shows and series", "displayOrder": 1, "visible": true, "featured": true },
+  { "id": "kids", "name": "Kids", "icon": "☼", "description": "Family-friendly channels", "displayOrder": 2, "visible": true, "featured": false },
+  { "id": "news", "name": "News", "icon": "◉", "description": "News and current affairs", "displayOrder": 3, "visible": true, "featured": true },
+  { "id": "sports", "name": "Sports", "icon": "◈", "description": "Live sports coverage", "displayOrder": 4, "visible": true, "featured": true },
+  { "id": "movies", "name": "Movies", "icon": "▣", "description": "Films and cinema", "displayOrder": 5, "visible": true, "featured": false },
+  { "id": "music", "name": "Music", "icon": "♫", "description": "Music and performances", "displayOrder": 6, "visible": true, "featured": false },
+  { "id": "documentary", "name": "Documentary", "icon": "▤", "description": "Factual programming", "displayOrder": 7, "visible": true, "featured": false }
+]

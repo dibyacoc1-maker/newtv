@@ -1,0 +1,64 @@
+{
+  "appName": "Luma TV",
+  "shortName": "Luma TV",
+  "logoUrl": "",
+  "faviconUrl": "",
+  "appIconUrl": "",
+  "tagline": "Your channels. Your screen.",
+  "description": "A configurable live television experience.",
+  "themeColor": "#e83b4f",
+  "primaryColor": "#ee4054",
+  "secondaryColor": "#ffd166",
+  "backgroundColor": "#0c0e12",
+  "surfaceColor": "#171a20",
+  "defaultTheme": "dark",
+  "notice": "Add your authorized stream sources in data/channels.json to start watching.",
+  "noticeVisible": true,
+  "navigation": [
+    {
+      "id": "home",
+      "label": "Home",
+      "icon": "⌂",
+      "href": "#home",
+      "visible": true
+    },
+    {
+      "id": "channels",
+      "label": "All channels",
+      "icon": "▦",
+      "href": "#channels",
+      "visible": true
+    },
+    {
+      "id": "favorites",
+      "label": "Favorites",
+      "icon": "♡",
+      "href": "#favorites",
+      "visible": true
+    },
+    {
+      "id": "settings",
+      "label": "Settings",
+      "icon": "⚙",
+      "href": "#settings",
+      "visible": true
+    }
+  ],
+  "home": {
+    "showFeatured": true,
+    "showContinueWatching": true,
+    "showRecentlyWatched": true,
+    "showFavorites": true,
+    "showCategories": true
+  },
+  "player": {
+    "autoPlay": true,
+    "defaultVolume": 0.8,
+    "autoHideControlsMs": 4000
+  },
+  "defaultChannel": "",
+  "appVersion": "1.0.1",
+  "configurationVersion": 1,
+  "lastUpdated": "2026-11-10",
+  "maintenanceMode": false
+}
