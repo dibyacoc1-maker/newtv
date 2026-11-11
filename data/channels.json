@@ -16,7 +16,7 @@
       }
     ],
     "name": "Zee Bangla",
-    "logo": "",
+    "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D100064478060552&f=1&nofb=1&ipt=85e87da78a99f2870a76bb7d4e945ccbbfd79b96d63816af01302dec290b399f&ipo=images",
     "category": "entertainment",
     "description": "Bengali entertainment channel",
     "featured": true,
@@ -48,7 +48,7 @@
       }
     ],
     "name": "Star Jalsha",
-    "logo": "",
+    "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg1.hotstarext.com%2Fimage%2Fupload%2Ff_auto%2Fsources%2Fr1%2Fcms%2Fprod%2F7207%2F597207-h&f=1&nofb=1&ipt=1cf5f87dc76cb33b4a30f2f0a6c7a88e828975c56e5a77d399f9a32698975cb5&ipo=images",
     "category": "entertainment",
     "description": "Bengali entertainment channel",
     "featured": true,
@@ -87,7 +87,7 @@
       }
     ],
     "name": "Zee Bangla (Alternate)",
-    "logo": "",
+    "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D100064478060552&f=1&nofb=1&ipt=85e87da78a99f2870a76bb7d4e945ccbbfd79b96d63816af01302dec290b399f&ipo=images",
     "category": "entertainment",
     "description": "Alternate Zee Bangla stream sources",
     "featured": false,
@@ -105,28 +105,10 @@
       }
     ],
     "name": "Zee 24 Ghanta",
-    "logo": "",
+    "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.mediainfoline.com%2Fwp-content%2Fuploads%2F2021%2F01%2FZEE_24_Ghanta.jpg&f=1&nofb=1&ipt=db3e5d12bd11d01df82b64fee0188836369b4f7024d56bbd58df9488b5a3d04e&ipo=imagesa",
     "category": "news",
     "description": "Bengali news and current affairs",
     "featured": true,
-    "visible": true
-  },
-  "batul-the-great": {
-    "id": "batul-the-great",
-    "servers": [
-      {
-        "name": "Server 1",
-        "priority": 1,
-        "type": "m3u8",
-        "url": "https://live20.bozztv.com/giatvplayout7/giatv-209869/index.m3u8",
-        "status": "active"
-      }
-    ],
-    "name": "Batul the Great",
-    "logo": "",
-    "category": "kids",
-    "description": "Children’s animation channel",
-    "featured": false,
     "visible": true
   },
   "goldmine": {
@@ -155,7 +137,7 @@
       }
     ],
     "name": "Goldmines",
-    "logo": "",
+    "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fassets.airtel.in%2Fstatic-assets%2Fcms%2Fdth%2Fimages%2Fchannellogo%2FGoldmines.png&f=1&nofb=1&ipt=7d52c8ddc623b2ebf3701c9b192322af872d5bcd2e192784d981bb4fd2f2f99f&ipo=images",
     "category": "movies",
     "description": "Movies and entertainment",
     "featured": false,
